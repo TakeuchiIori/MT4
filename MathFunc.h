@@ -221,3 +221,6 @@ Quaternion LookAtQuaternion(const Vector3& from, const Vector3& to, const Vector
 
 // Quaternionから前方向ベクトルを取得する関数
 Vector3 QuaternionToForward(const Quaternion& quat);
+
+// ================================= MT4 =================================//
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);

@@ -1039,3 +1039,42 @@ Vector3 QuaternionToForward(const Quaternion& quat) {
     float z = 1 - 2 * (quat.x * quat.x + quat.y * quat.y);
     return Vector3(x, y, z);
 }
+
+//=============================== MT4=============================//
+
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
+    // 回転軸ベクトルを正規化
+    Vector3 normalizedAxis = axis.normalize();
+    float x = normalizedAxis.x;
+    float y = normalizedAxis.y;
+    float z = normalizedAxis.z;
+
+    // 角度に対する三角関数の値を計算
+    float cosTheta = cos(angle);
+    float sinTheta = sin(angle);
+    float oneMinusCos = 1.0f - cosTheta;
+
+    // 回転行列の各要素を計算
+    Matrix4x4 rotationMatrix;
+    rotationMatrix.m[0][0] = cosTheta + x * x * oneMinusCos;
+    rotationMatrix.m[0][1] = x * y * oneMinusCos + z * sinTheta;
+    rotationMatrix.m[0][2] = x * z * oneMinusCos - y * sinTheta;
+    rotationMatrix.m[0][3] = 0.0f;
+
+    rotationMatrix.m[1][0] = y * x * oneMinusCos - z * sinTheta;
+    rotationMatrix.m[1][1] = cosTheta + y * y * oneMinusCos;
+    rotationMatrix.m[1][2] = y * z * oneMinusCos + x * sinTheta;
+    rotationMatrix.m[1][3] = 0.0f;
+
+    rotationMatrix.m[2][0] = z * x * oneMinusCos + y * sinTheta;
+    rotationMatrix.m[2][1] = z * y * oneMinusCos - x * sinTheta;
+    rotationMatrix.m[2][2] = cosTheta + z * z * oneMinusCos;
+    rotationMatrix.m[2][3] = 0.0f;
+
+    rotationMatrix.m[3][0] = 0.0f;
+    rotationMatrix.m[3][1] = 0.0f;
+    rotationMatrix.m[3][2] = 0.0f;
+    rotationMatrix.m[3][3] = 1.0f;
+
+    return rotationMatrix;
+}
