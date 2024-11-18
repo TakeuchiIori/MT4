@@ -12,8 +12,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
-	Vector3 axis = Normalize(Vector3{ 1.0f,1.0f,1.0f });
-	float angle = 0.44f;
+	Vector3 from[2] = { Normalize(Vector3{1.0f,0.7f,0.5f}),Normalize(Vector3{-0.6f,0.9f,0.2f}) };
+	Vector3 to[2] = { Vector3{-from[0].x,-from[0].y,-from[0].z},Normalize(Vector3{0.4f,0.7f,-0.5f}) };
+
+	Matrix4x4 rotateMatrix[3] = { DirectionToDirection(Normalize(Vector3{1.0f,0.0f,0.0f}),Normalize(Vector3{-1.0f,0.0f,0.0f})),
+								 DirectionToDirection(from[0],to[0]),
+								 DirectionToDirection(from[1],to[1])
+	};
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -28,7 +33,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		Matrix4x4 rotatematrix = MakeRotateAxisAngle(axis, angle);
+		
 
 
 		///
@@ -38,9 +43,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
+		MatrixScreenPrintf(0, 0, rotateMatrix[0], "Matrix0");
 
-		MatrixScreenPrintf(0, 0, rotatematrix, "rotateMatrix");
+		MatrixScreenPrintf(0, 100, rotateMatrix[1], "Matrix1");
 
+		MatrixScreenPrintf(0, 200, rotateMatrix[2], "Matrix2");
 		///
 		/// ↑描画処理ここまで
 		///

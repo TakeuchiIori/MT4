@@ -73,6 +73,29 @@ float Distance(const Vector3& a, const Vector3& b) {
     return std::sqrt(dx * dx + dy * dy + dz * dz);
 }
 
+/// <summary>
+/// 与えられたベクトルに直交する任意のベクトルを返す関数
+/// </summary>
+/// <param name="v">入力ベクトル</param>
+/// <returns>入力ベクトルに直交するベクトル</returns>
+Vector3 OrthogonalVector(const Vector3& v) {
+    // 入力ベクトルがゼロベクトルの場合はエラーを返す（または特別な処理を行う）
+    if (v.x == 0 && v.y == 0 && v.z == 0) {
+        throw std::invalid_argument("Zero vector does not have an orthogonal vector.");
+    }
+
+    // 任意の軸と直交するベクトルを選択
+    // x成分がゼロでない場合、y軸に対する直交ベクトルを生成
+    if (v.x != 0 || v.y != 0) {
+        return Vector3(-v.y, v.x, 0); // 例: (x, y, z) → (-y, x, 0)
+    }
+    else {
+        // x成分とy成分がゼロの場合（z軸に沿ったベクトル）、x-y平面上のベクトルを返す
+        return Vector3(0, -v.z, v.y); // 例: (0, 0, z) → (0, -z, y)
+    }
+}
+
+
 Vector3 CatmullRomSpline(const std::vector<Vector3>& controlPoints, float t) {
     // コントロールポイントが4つでないときはエラーを表示する。
     if (controlPoints.size() != 4) {
@@ -1077,4 +1100,61 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
     rotationMatrix.m[3][3] = 1.0f;
 
     return rotationMatrix;
+}
+
+/// <summary>
+/// ある方向（from）を別の方向（to）に向ける回転行列を生成する関数
+/// </summary>
+/// <param name="from">始点の方向ベクトル</param>
+/// <param name="to">目標の方向ベクトル</param>
+/// <returns>回転行列(Matrix4x4)</returns>
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
+    // ベクトルを正規化
+    Vector3 u = Normalize(from);
+    Vector3 v = Normalize(to);
+
+    // 内積と外積を計算
+    float cosTheta = Dot(u, v);  // u・v
+    Vector3 n = Cross(u, v);     // u × v
+    float sinTheta = Length(n);  // |u × v|
+
+    // 特殊ケース: ベクトルが平行の場合
+    if (sinTheta == 0.0f) {
+        if (cosTheta > 0.0f) {
+            // u == v の場合: 単位行列を返す
+            return MakeIdentity4x4();
+        }
+        else {
+            // u == -v の場合: 180度回転
+            Vector3 orthogonal = OrthogonalVector(u); // u に直交する任意のベクトルを取得
+            return MakeRotateAxisAngle(orthogonal, static_cast<float>(M_PI)); // 180度回転行列
+        }
+    }
+
+    // 回転軸の正規化
+    n = Normalize(n);
+
+    // 回転行列の各成分を計算
+    float nx = n.x, ny = n.y, nz = n.z;
+    float oneMinusCos = 1.0f - cosTheta;
+
+    Matrix4x4 R;
+    R.m[0][0] = nx * nx * oneMinusCos + cosTheta;
+    R.m[0][1] = nx * ny * oneMinusCos + nz * sinTheta;
+    R.m[0][2] = nx * nz * oneMinusCos - ny * sinTheta;
+
+    R.m[1][0] = ny * nx * oneMinusCos - nz * sinTheta;
+    R.m[1][1] = ny * ny * oneMinusCos + cosTheta;
+    R.m[1][2] = ny * nz * oneMinusCos + nx * sinTheta;
+
+    R.m[2][0] = nz * nx * oneMinusCos + ny * sinTheta;
+    R.m[2][1] = nz * ny * oneMinusCos - nx * sinTheta;
+    R.m[2][2] = nz * nz * oneMinusCos + cosTheta;
+
+    // 残りの成分を単位行列に設定
+    R.m[0][3] = R.m[1][3] = R.m[2][3] = 0.0f;
+    R.m[3][0] = R.m[3][1] = R.m[3][2] = 0.0f;
+    R.m[3][3] = 1.0f;
+
+    return R;
 }

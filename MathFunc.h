@@ -85,6 +85,8 @@ Vector4 Normalize(const Vector4& v);
 // 2つのVector3間の距離を計算する関数
 float Distance(const Vector3& a, const Vector3& b);
 
+Vector3 OrthogonalVector(const Vector3& v);
+
 // Catmull-Romスプライン補間を用いて曲線上の点を計算する関数
 Vector3 CatmullRomSpline(const std::vector<Vector3>& controlPoints, float t);
 
@@ -224,3 +226,5 @@ Vector3 QuaternionToForward(const Quaternion& quat);
 
 // ================================= MT4 =================================//
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
