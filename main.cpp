@@ -12,12 +12,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
-	Quaternion rotation = MakeRotateAxisAngleQuaternion(
-		Normalize(Vector3{ 1.0f,0.4f,-0.2f }), 0.45f);
-	Vector3 pointY = { 2.1f,-0.9f,1.3f };
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotation);
-	Vector3 rotateByquaternion = RotateVector(pointY, rotation);
-	Vector3 rotateByMatrix = TransformCoordinates(pointY, rotateMatrix);
+	Quaternion rotation[2] = { 
+		MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 0.71f,0.71f,0.0f }), 0.3f),
+		MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 0.71f,0.0f,0.71f }),3.141592f), 
+	};
+
+
+	Quaternion interpolate[5] = {
+		Slerp(rotation[0],rotation[1],0.0f),
+		Slerp(rotation[0],rotation[1],0.3f),
+		Slerp(rotation[0],rotation[1],0.5f),
+		Slerp(rotation[0],rotation[1],0.7f),
+		Slerp(rotation[0],rotation[1],1.0f),
+	};
+	
 
 	const uint32_t kRowHeight = 20;
 
@@ -44,10 +52,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		QuaternionScreenPrint(10, kRowHeight * 0, rotation, "rotation");
-		MatrixScreenPrintf(10, kRowHeight * 1, rotateMatrix, "rotateMatrix");
-		VectorScreenPrintf(10, kRowHeight * 6, rotateByquaternion, "rotateByquaternion");
-		VectorScreenPrintf(10, kRowHeight * 7, rotateByMatrix, "rotateByMatrix");
+		
+		QuaternionScreenPrint(10, kRowHeight * 0, interpolate[0], "Interpolate[0] : Slerp(q0,q1,0.0f)");
+		QuaternionScreenPrint(10, kRowHeight * 1, interpolate[1], "Interpolate[1] : Slerp(q0,q1,0.3f)");
+		QuaternionScreenPrint(10, kRowHeight * 2, interpolate[2], "Interpolate[2] : Slerp(q0,q1,0.5f)");
+		QuaternionScreenPrint(10, kRowHeight * 3, interpolate[3], "Interpolate[3] : Slerp(q0,q1,0.7f)");
+		QuaternionScreenPrint(10, kRowHeight * 4, interpolate[4], "Interpolate[4] : Slerp(q0,q1,1.0f)");
 
 
 		///
