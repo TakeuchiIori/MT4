@@ -38,7 +38,7 @@ struct OBB {
 };
 struct Quaternion
 {
-	float w, x, y, z;
+	float x, y, z, w;
 	// 単位クォータニオンを簡単に返すための静的メンバ
 	static Quaternion Identity() {
 		return { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -167,8 +167,9 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 // クロス積
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
-
-
+//=============================================================================//
+/*								クォータニオン									   */
+//=============================================================================//
 
 // 単位クォータニオンを返す関数
 Quaternion IdentityQuaternion();
@@ -223,6 +224,8 @@ Quaternion LookAtQuaternion(const Vector3& from, const Vector3& to, const Vector
 
 // Quaternionから前方向ベクトルを取得する関数
 Vector3 QuaternionToForward(const Quaternion& quat);
+
+
 
 // ================================= MT4 =================================//
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);

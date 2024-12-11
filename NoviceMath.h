@@ -18,3 +18,11 @@ void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) 
 	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
 }
 
+void QuaternionScreenPrint(int x, int y, const Quaternion& q, const char* label) {
+	Novice::ScreenPrintf(x, y, "%.02f", q.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", q.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", q.z);
+	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%.02f", q.w);
+	Novice::ScreenPrintf(x + kColumnWidth * 4, y, "%s", label);
+}
+
