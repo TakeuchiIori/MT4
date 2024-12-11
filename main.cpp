@@ -13,8 +13,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = {0};
 
 	Quaternion rotation[2] = { 
-		MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 0.71f,0.71f,0.0f }), 0.3f),
-		MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 0.71f,0.0f,0.71f }),3.141592f), 
+		MakeRotateAxisAngleQuaternion({ 0.71f,0.71f,0.0f }, 0.3f),
+		MakeRotateAxisAngleQuaternion({ 0.71f,0.0f,0.71f },3.141592f), 
 	};
 
 
