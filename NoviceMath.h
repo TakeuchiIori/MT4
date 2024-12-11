@@ -12,9 +12,9 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* name)
 }
 
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
-	Novice::ScreenPrintf(x, y, "%.03f", vector.x);
-	Novice::ScreenPrintf(x + kColumnWidth, y, "%.03f", vector.y);
-	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.03f", vector.z);
+	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", vector.z);
 	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
 }
 
