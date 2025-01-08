@@ -1,6 +1,6 @@
 #include <Novice.h>
 #include "NoviceMath.h"
-const char kWindowTitle[] = "MT4_01_01";
+const char kWindowTitle[] = "MT4";
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -12,9 +12,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
-	Quaternion rotation[2] = { 
+	Quaternion rotation[] = {
 		MakeRotateAxisAngleQuaternion({ 0.71f,0.71f,0.0f }, 0.3f),
-		MakeRotateAxisAngleQuaternion({ 0.71f,0.0f,0.71f },3.141592f), 
+		{-rotation[0].x,-rotation[0].y,-rotation[0].z, -rotation[0].w},
 	};
 
 

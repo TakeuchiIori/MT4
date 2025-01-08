@@ -807,6 +807,12 @@ float Dot(const Quaternion& q0, const Quaternion& q1) {
     return q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
 }
 
+
+// グローバル演算子 (左辺スカラー)
+Quaternion operator*(float scalar, const Quaternion& q) {
+    return Quaternion{ q.x * scalar, q.y * scalar, q.z * scalar, q.w * scalar };
+}
+
 Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
     // クォータニオンの内積を計算
     float dot = Dot(q0, q1);
@@ -831,6 +837,15 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
         float norm = std::sqrt(result.x * result.x + result.y * result.y + result.z * result.z + result.w * result.w);
         return { result.x / norm, result.y / norm, result.z / norm, result.w / norm };
     }
+
+    if (dot >= 1.0f - THRESHOLD) {
+        Quaternion result = (1.0f - t) * q0 + t * q1;
+
+        // 正規化
+        float norm = std::sqrt(result.x * result.x + result.y * result.y + result.z * result.z + result.w * result.w);
+        return { result.x / norm, result.y / norm, result.z / norm, result.w / norm };
+    }
+
 
     // 角度を計算
     float theta_0 = std::acos(dot);
@@ -1101,6 +1116,7 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 
     return rotationMatrix;
 }
+
 
 /// <summary>
 /// ある方向（from）を別の方向（to）に向ける回転行列を生成する関数

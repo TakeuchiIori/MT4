@@ -44,6 +44,16 @@ struct Quaternion
 		return { 0.0f, 0.0f, 0.0f, 1.0f };
 	}
 
+	// Quaternion 同士の加算
+	Quaternion operator+(const Quaternion& other) const {
+		return Quaternion{
+			x + other.x,
+			y + other.y,
+			z + other.z,
+			w + other.w
+		};
+	}
+
 	// クォータニオンの掛け算演算子オーバーロード
 	Quaternion operator*(const Quaternion& q) const {
 		return Quaternion(
@@ -54,6 +64,7 @@ struct Quaternion
 		);
 	}
 };
+
 
 // ベクトルの内積を計算する関数
 float Dot(const Vector3& a, const Vector3& b);
