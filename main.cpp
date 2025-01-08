@@ -12,23 +12,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
-	Quaternion rotation[] = {
-		MakeRotateAxisAngleQuaternion({ 0.71f,0.71f,0.0f }, 0.3f),
-		{-rotation[0].x,-rotation[0].y,-rotation[0].z, -rotation[0].w},
-	};
-
-
-	Quaternion interpolate[5] = {
-		Slerp(rotation[0],rotation[1],0.0f),
-		Slerp(rotation[0],rotation[1],0.3f),
-		Slerp(rotation[0],rotation[1],0.5f),
-		Slerp(rotation[0],rotation[1],0.7f),
-		Slerp(rotation[0],rotation[1],1.0f),
-	};
-	
-
-	const uint32_t kRowHeight = 20;
-
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -51,13 +34,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-
-		
-		QuaternionScreenPrint(10, kRowHeight * 0, interpolate[0], "Interpolate[0] : Slerp(q0,q1,0.0f)");
-		QuaternionScreenPrint(10, kRowHeight * 1, interpolate[1], "Interpolate[1] : Slerp(q0,q1,0.3f)");
-		QuaternionScreenPrint(10, kRowHeight * 2, interpolate[2], "Interpolate[2] : Slerp(q0,q1,0.5f)");
-		QuaternionScreenPrint(10, kRowHeight * 3, interpolate[3], "Interpolate[3] : Slerp(q0,q1,0.7f)");
-		QuaternionScreenPrint(10, kRowHeight * 4, interpolate[4], "Interpolate[4] : Slerp(q0,q1,1.0f)");
 
 
 		///
