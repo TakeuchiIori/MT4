@@ -1174,3 +1174,39 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 
     return R;
 }
+
+
+Vector3 Project(const Vector3& v, const Vector3& axis)
+{
+    float projectionScale = Dot(v, axis) / Dot(axis, axis);
+    return axis * projectionScale;
+}
+
+std::pair<Vector3, Vector3> ComputeCollisionVelocities(float mass1, const Vector3& velocity1, float mass2, const Vector3& velocity2, float coefficientOfRestitution, const Vector3& normal)
+{
+    // 衝突法線方向（射影）とその他に分解
+    Vector3 project1 = Project(velocity1, normal);
+    Vector3 project2 = Project(velocity2, normal);
+    Vector3 sub1 = velocity1 - project1;
+    Vector3 sub2 = velocity2 - project2;
+
+    // 衝突法線方向における反発後の速度を計算
+    float v1n = Dot(project1, normal); // 質点1の法線方向速度
+    float v2n = Dot(project2, normal); // 質点2の法線方向速度
+
+    float newV1n = (v1n * (mass1 - mass2) + 2 * mass2 * v2n) / (mass1 + mass2);
+    float newV2n = (v2n * (mass2 - mass1) + 2 * mass1 * v1n) / (mass1 + mass2);
+
+    newV1n *= coefficientOfRestitution; // 反発係数を考慮
+    newV2n *= coefficientOfRestitution; // 反発係数を考慮
+
+    // 衝突後の法線方向の速度
+    Vector3 velocityAfter1 = normal * newV1n;
+    Vector3 velocityAfter2 = normal * newV2n;
+
+    // 衝突後の速度は、法線方向の速度 + 元の接線方向の速度
+    Vector3 finalVelocity1 = velocityAfter1 + sub1;
+    Vector3 finalVelocity2 = velocityAfter2 + sub2;
+
+    return std::make_pair(finalVelocity1, finalVelocity2);
+}

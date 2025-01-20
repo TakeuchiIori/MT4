@@ -9,6 +9,8 @@
 #include <numbers>
 #include <stdexcept>
 #include <algorithm>
+#include <utility> // std::pair
+#include <cmath>   // 必要な数学関数を含む
 
 struct Sphere {
 	Vector3 center; // !< 中心点
@@ -242,3 +244,14 @@ Vector3 QuaternionToForward(const Quaternion& quat);
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
+// Dot関数（ベクトルの内積を計算）
+float Dot(const Vector3& v1, const Vector3& v2);
+// ベクトルを特定の軸（法線方向）に射影する
+Vector3 Project(const Vector3& v, const Vector3& axis);
+
+// 衝突後の速度を計算する関数
+std::pair<Vector3, Vector3> ComputeCollisionVelocities(
+	float mass1, const Vector3& velocity1,
+	float mass2, const Vector3& velocity2,
+	float coefficientOfRestitution, const Vector3& normal);
