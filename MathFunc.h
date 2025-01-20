@@ -44,25 +44,46 @@ struct Quaternion
 		return { 0.0f, 0.0f, 0.0f, 1.0f };
 	}
 
-	// Quaternion 同士の加算
-	Quaternion operator+(const Quaternion& other) const {
-		return Quaternion{
-			x + other.x,
-			y + other.y,
-			z + other.z,
-			w + other.w
-		};
-	}
+    // 加算
+    Quaternion operator+(const Quaternion& q) const {
+        return { x + q.x, y + q.y, z + q.z, w + q.w };
+    }
 
-	// クォータニオンの掛け算演算子オーバーロード
-	Quaternion operator*(const Quaternion& q) const {
-		return Quaternion(
-			w * q.w - x * q.x - y * q.y - z * q.z,
-			w * q.x + x * q.w + y * q.z - z * q.y,
-			w * q.y - x * q.z + y * q.w + z * q.x,
-			w * q.z + x * q.y - y * q.x + z * q.w
-		);
-	}
+    // 減算
+    Quaternion operator-(const Quaternion& q) const {
+        return { x - q.x, y - q.y, z - q.z, w - q.w };
+    }
+
+    // スカラー乗算
+    Quaternion operator*(float scalar) const {
+        return { x * scalar, y * scalar, z * scalar, w * scalar };
+    }
+
+    // クォータニオン乗算（ハミルトン積）
+    Quaternion operator*(const Quaternion& q) const {
+        return {
+            w * q.x + x * q.w + y * q.z - z * q.y,
+            w * q.y - x * q.z + y * q.w + z * q.x,
+            w * q.z + x * q.y - y * q.x + z * q.w,
+            w * q.w - x * q.x - y * q.y - z * q.z
+        };
+    }
+
+    // スカラー除算
+    Quaternion operator/(float scalar) const {
+        if (scalar == 0.0f) throw std::runtime_error("Division by zero in quaternion operation.");
+        return { x / scalar, y / scalar, z / scalar, w / scalar };
+    }
+
+    // 等価比較
+    bool operator==(const Quaternion& q) const {
+        return x == q.x && y == q.y && z == q.z && w == q.w;
+    }
+
+    // 非等価比較
+    bool operator!=(const Quaternion& q) const {
+        return !(*this == q);
+    }
 };
 
 
@@ -213,7 +234,7 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 float Dot(const Quaternion& q0, const Quaternion& q1);
 
 // 2つのクォータニオン間で球面線形補間（Slerp）を行う関数
-Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
+Quaternion Slerp(const Quaternion& q0, Quaternion& q1, float t);
 
 // クォータニオンからオイラー角を作成する関数
 Vector3 QuaternionToEuler(const Quaternion& q);
@@ -239,6 +260,7 @@ Vector3 QuaternionToForward(const Quaternion& quat);
 
 
 // ================================= MT4 =================================//
+
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
