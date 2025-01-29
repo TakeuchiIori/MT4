@@ -813,7 +813,7 @@ Quaternion operator*(float scalar, const Quaternion& q) {
     return Quaternion{ q.x * scalar, q.y * scalar, q.z * scalar, q.w * scalar };
 }
 
-Quaternion Slerp(const Quaternion& q0,Quaternion& q1, float t) {
+Quaternion Slerp(Quaternion& q0,Quaternion& q1, float t) {
     if (t < 0.0f || t > 1.0f) throw std::invalid_argument("Interpolation factor t must be between 0 and 1.");
 
     // クォータニオンの内積を計算
@@ -821,14 +821,14 @@ Quaternion Slerp(const Quaternion& q0,Quaternion& q1, float t) {
 
     // 符号反転処理（再帰を排除）
     if (dot < 0.0f) {
-        q1 = { -q1.x, -q1.y, -q1.z, -q1.w };
+        q0 = { -q0.x, -q0.y, -q0.z, -q0.w };
         dot = -dot;
     }
 
-    const float THRESHOLD = 0.9995f;
+    const float THRESHOLD = 0.0005f;
 
     // 線形補間（内積が閾値以上の場合）
-    if (dot > THRESHOLD) {
+    if (dot > 1.0f - THRESHOLD) {
         Quaternion result = q0 + (q1 - q0) * t;
         return Normalize(result);
     }

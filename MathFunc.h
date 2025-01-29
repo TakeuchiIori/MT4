@@ -234,7 +234,7 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 float Dot(const Quaternion& q0, const Quaternion& q1);
 
 // 2つのクォータニオン間で球面線形補間（Slerp）を行う関数
-Quaternion Slerp(const Quaternion& q0, Quaternion& q1, float t);
+Quaternion Slerp(Quaternion& q0, Quaternion& q1, float t);
 
 // クォータニオンからオイラー角を作成する関数
 Vector3 QuaternionToEuler(const Quaternion& q);
